@@ -14,6 +14,84 @@
 
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/abbkit/lemon)
 
+
+# V2
+1. 移除zookeeper， 使用RAFT实现leader选取、同时增加底层lemondb存储的多副本支持
+2. 从JAVA8迁移到 **JAVA17**
+3. 项目拆分为两个部分：
+   - lemondb存储引擎，纯粹地支持LQL的执行，数据存储，多节点(stateless)支持其他存储引擎的访问，比如MYSQL、REDIS、NO-SQL等
+   - lemondb ui项目，lemondb存储引擎的前端访问页面
+4. 元数据同时存在MYSQL和lemondb底层的分布式文件存储中，元数据通过RAFT协议复制到集群中的所有节点
+
+
+## lemondb存储引擎
+
+一个简单的存储引擎，所有的数据以行的形式存储，数据行以行键升序排序，存储在本地文件系统中，文件生成之后不能修改。
+文件数据的管理以页为最小单位，1个页16K大小，64个页为一个块，N个块组成一个segment，一个文件就是一个segment，所有的segment都是只读的，
+多个segment组成tablespace，tablespace表示一类数据，或者说一张表。
+
+### PAGE
+
+一个数据
+
+### BLOCK
+
+块对象的描述，PAGE磁盘空间是由块对象管理的，每次申请的磁盘空间是一个块的大小
+
+### SEGMENT
+
+一个文件就是一个segment，
+
+#### PAGE INDEX 
+
+```
+
+PAGE的infKey和supKey构成整个skip-list
+   
+-  |  - |  -  |  -  |  - |  -  |  -  |  - |  -  |  -  |  - |  -  |  -  
+    \ /         \  /      \   /       \  /        \  /      \  /
+     P0          P1        P2          P3          P4        P5
+     
+                      PX(infKey,supKey)
+     
+            --------------------------------------------
+开始节点是一个PAGE的infKey ， 则这个PAGE为第一个PAGE 
+开始节点是一个PAGE的supKey ，如果包含开始节点， 则这个PAGE为第一个PAGE；否则下一个PAGE为第一个PAGE
+
+结束节点是一个PAGE的infKey ，如果包含结束节点， 则这个PAGE为最后一个PAGE；否则上一个PAGE为最后一个PAGE
+结束节点是一个PAGE的supKey ， 则这个PAGE为最后一个PAGE
+
+1. 范围查询: 
+
+
+```
+
+### TABLESPACE
+
+由多个segment组成
+
+### 索引
+可以给某个字段添加索引，索引数据也是以行的形式存储到segment中，索引行的行键是由被索引行的索引字段值和索引序号组合而成，索引行的值是被索引行的行键，
+索引行的版本和被索引行的版本一样。
+
+```
+vcc  id  age            vcc   index(age,seq)    id 
+ 1   ab, 2               2       1          abc               
+ 2   abc, 1              1       2          ab
+ 7   abe, 3        =>    7       3          abe
+ 9   fd, 10              12      7          fo
+ 10  fk, 8               10      8,0        fk
+ 12  fo, 7               19      8,1        xz
+ 19  xz, 8               9       10         fd
+```
+
+### 数据删除
+因为segment不能修改，数据删除的时候，会把删除的行键存储到对应的.del文件中，一个segment对应一个.del文件，
+.del文件会存在多个版本，在新的segment持久化到磁盘到时候，会生成一个更高版本的.del文件，其操作是通过复制当前的.del文件
+，然后追加当前新删除的数据行键完成的。
+
+
+# V1
 有NOSQL、SQL-RELATED 存储，比如HBAE、ElasticSearch、MongoDB、MYSQL，每种存储有自己独特的数据访问结构和连接方式，在使用这些存储的过程中，突然有一天，我想是否可以有一种公共的方式来隔离这些差异性，由此这个项目试探性的通过在这些存储的上层建立一个公共的数据结构，使用HTTP协议的访问方式来隔离这些存储。设计目标
 1. 行级别的操作，包括PUT和SELECT
 2. 多行查询操作，SELECT 
