@@ -16,12 +16,12 @@
 
 
 # V2
-1. 移除zookeeper， 使用RAFT实现leader选取、同时增加底层lemondb存储的多副本支持
+1. 移除zookeeper， 使用RAFT实现leader选取、同时增加底层lemondb存储引擎的多副本支持
 2. 从JAVA8迁移到 **JAVA17**
 3. 项目拆分为两个部分：
-   - lemondb存储引擎，纯粹地支持LQL的执行，数据存储，多节点(stateless)支持其他存储引擎的访问，比如MYSQL、REDIS、NO-SQL等
-   - lemondb ui项目，lemondb存储引擎的前端访问页面
-4. 元数据同时存在MYSQL和lemondb底层的分布式文件存储中，元数据通过RAFT协议复制到集群中的所有节点
+   - lemondb存储，支持LQL的执行，数据存储，多节点(stateless)支持其他存储引擎的访问，比如MYSQL、REDIS、NO-SQL等
+   - lemondb ui服务，lemondb存储的前端管理页面
+4. 元数据同时存在MYSQL和lemondb存储引擎中，lemondb存储引擎中的元数据通过RAFT协议复制到集群中的所有节点
 
 
 ## lemondb存储引擎
