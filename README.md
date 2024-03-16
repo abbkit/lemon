@@ -28,8 +28,6 @@
 	- 移除HBASE
  	- 移除ES
  	- 移除Lucene
-
-**最终版本了，最终版本了，最终版本了，NEVER CODING**
  
 
 在线示例
