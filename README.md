@@ -14,7 +14,7 @@
 
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/abbkit/lemon)
 
-# 2024.0.1-java21
+# V3
 1. **java21**支持
 2. lemondb存储引擎支持分布式
 3. RAFT分布式协议实现 ( **RAFT GROUP** )
@@ -36,9 +36,6 @@
 ---
 VUE+ELEMENT PLUS ( MVVM ): http://lemon.abbkit.com/
 
-测试报告
----
-http://test.lemon.abbkit.com/
 
 # V2
 1. 移除zookeeper， 使用RAFT实现leader选取、同时增加底层lemondb存储引擎的多副本支持
