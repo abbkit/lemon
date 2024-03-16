@@ -14,6 +14,10 @@
 
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/abbkit/lemon)
 
+@2018-2024 下一个更新会是支持**JAVA25** , 功能上不会再更新
+
+https://www.oracle.com/java/technologies/java-se-support-roadmap.html
+
 # V3
 1. **java21**支持
 2. lemondb存储引擎支持分布式
