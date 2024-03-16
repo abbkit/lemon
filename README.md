@@ -14,6 +14,31 @@
 
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/abbkit/lemon)
 
+# 2024.0.1-java21
+1. **java21**支持
+2. lemondb存储引擎支持分布式
+3. RAFT分布式协议实现 ( **RAFT GROUP** )
+  -- 表 一写多读 ( **表级别**，表的Primary分布在一个节点 )
+  -- 集群 多写多读 ( **节点级别**， 多个节点可以同时写入，每张表的Primary分布在不同的节点 )
+4. 移除了MYSQL的依赖，现在元数据不再存储在MYSQL，而是存储在lemondb存储引擎内部（**元数据分布式表**）
+5. lemondb存储引擎可以独立于RAFT协议使用，这样就是本地化的单节点存储引擎
+6. 底层存储引擎插件化优化
+ -- MYSQL支持优化
+ -- REDIS支持优化
+ -- 移除HBASE
+ -- 移除ES
+ -- 移除Lucene
+
+**最终版本了，最终版本了，最终版本了，NEVER CODING**
+ 
+
+在线示例
+---
+VUE+ELEMENT PLUS ( MVVM ): http://lemon.abbkit.com/
+
+测试报告
+---
+http://test.lemon.abbkit.com/
 
 # V2
 1. 移除zookeeper， 使用RAFT实现leader选取、同时增加底层lemondb存储引擎的多副本支持
