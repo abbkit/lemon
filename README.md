@@ -32,7 +32,11 @@ https://www.oracle.com/java/technologies/java-se-support-roadmap.html
 	- 移除HBASE
  	- 移除ES
  	- 移除Lucene
- 
+7. lemondb存储引擎支持fetch-next，使用行主键扫描行数据的时候，最大支持10000行数据的拉取
+8. 内存优化
+	- 行扫描过程中共享块内存、页内存
+9. lemondb存储引擎segment合并过程中锁优化，减少锁持有的时间
+	- 合并过程中增加checkpoint，使用增量buffer存储合并过程中新put或者delete的数据   
 
 在线示例
 ---
